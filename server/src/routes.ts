@@ -7,10 +7,10 @@ export async function appRoutes(app: FastifyInstance) {
   app.post("/habits", async (request) => {
     const createHabitBody = z.object({
       title: z.string(),
-      weeDays: z.array(z.number().min(0).max(6)),
+      weekDays: z.array(z.number().min(0).max(6)),
     });
 
-    const { title, weeDays } = createHabitBody.parse(request.body);
+    const { title, weekDays } = createHabitBody.parse(request.body);
 
     const today = dayjs().startOf("day").toDate();
 
@@ -19,7 +19,7 @@ export async function appRoutes(app: FastifyInstance) {
         title,
         created_at: today,
         weekDays: {
-          create: weeDays.map((weeDay) => {
+          create: weekDays.map((weeDay) => {
             return {
               week_day: weeDay,
             };
