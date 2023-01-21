@@ -61,9 +61,10 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    const completedHabits = day?.dayHabits.map((dayHabit) => {
-      return dayHabit.habit_id;
-    });
+    const completedHabits =
+      day?.dayHabits.map((dayHabit) => {
+        return dayHabit.habit_id;
+      }) ?? [];
 
     return {
       possibleHabits,
@@ -121,13 +122,13 @@ export async function appRoutes(app: FastifyInstance) {
     }
   });
 
-  app.get("/summary", async (request) => {
+  app.get("/summary", async () => {
     const summary = await prisma.$queryRaw`
       SELECT 
-        D.id,
+        D.id, 
         D.date,
         (
-          SELECT
+          SELECT 
             cast(count(*) as float)
           FROM day_habits DH
           WHERE DH.day_id = D.id
@@ -135,13 +136,12 @@ export async function appRoutes(app: FastifyInstance) {
         (
           SELECT
             cast(count(*) as float)
-          FROM habit_week_days HWD
+          FROM habit_week_days HDW
           JOIN habits H
-            ON H.id = HWD.habit_id
+            ON H.id = HDW.habit_id
           WHERE
-            HWD.week_day = cast((strftime('%w', D.date / 1000.0, 'unixepoch')) as int)
+            HDW.week_day = cast(strftime('%w', D.date/1000.0, 'unixepoch') as int)
             AND H.created_at <= D.date
-
         ) as amount
       FROM days D
     `;
