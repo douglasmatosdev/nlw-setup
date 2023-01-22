@@ -4,8 +4,8 @@ import { generateDatesfromYearBegining } from "../utils/generate-dates-from-year
 
 import { DAY_SIZE, HabitDay } from "../components/HabitDay";
 import { Header } from "../components/Header";
-import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { api } from "../lib/axios";
 import { Loading } from "../components/Loading";
 import dayjs from "dayjs";
@@ -42,9 +42,11 @@ export function Home() {
     }
   }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   if (loading) {
     return <Loading />;
@@ -72,7 +74,7 @@ export function Home() {
       >
         {summary && (
           <View className="flex-row flex-wrap">
-            {datesFromYearStart.map((date, i) => {
+            {datesFromYearStart.map((date) => {
               const dayWithHabits = summary.find((day) => {
                 return dayjs(date).isSame(day.date, "day");
               });

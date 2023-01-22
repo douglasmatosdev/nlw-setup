@@ -14,6 +14,8 @@ const thirdHabitCreationDate = new Date("2023-01-08T03:00:00.000");
 async function run() {
   await prisma.habit.deleteMany();
   await prisma.day.deleteMany();
+  await prisma.dayHabit.deleteMany();
+  await prisma.habitWeekDays.deleteMany();
 
   /**
    * Create habits
@@ -66,7 +68,7 @@ async function run() {
     prisma.day.create({
       data: {
         /** Monday */
-        date: new Date("2023-01-02T03:00:00.000z"),
+        date: new Date("2023-01-02T03:00:00.000Z"),
         dayHabits: {
           create: {
             habit_id: firstHabitId,
@@ -81,7 +83,7 @@ async function run() {
     prisma.day.create({
       data: {
         /** Friday */
-        date: new Date("2023-01-06T03:00:00.000z"),
+        date: new Date("2023-01-06T03:00:00.000Z"),
         dayHabits: {
           create: {
             habit_id: firstHabitId,
@@ -96,7 +98,7 @@ async function run() {
     prisma.day.create({
       data: {
         /** Wednesday */
-        date: new Date("2023-01-04T03:00:00.000z"),
+        date: new Date("2023-01-04T03:00:00.000Z"),
         dayHabits: {
           create: [{ habit_id: firstHabitId }, { habit_id: secondHabitId }],
         },
